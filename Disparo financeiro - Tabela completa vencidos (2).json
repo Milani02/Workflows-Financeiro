@@ -1,0 +1,538 @@
+{
+  "name": "Disparo financeiro - Tabela completa vencidos",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Tabela completa Vencidos - DPO",
+        "height": 352,
+        "width": 1104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "d9e377eb-631a-4670-bc0a-59f1c1e8a14d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Tabela completa Vencidos - Biodinâmica",
+        "height": 368,
+        "width": 1104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "17a59e6c-aa62-45ab-841f-b129644983b2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Tabela completa Vencidos - MultiBrasil",
+        "height": 320,
+        "width": 1104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "8804f763-6c0e-4bad-a673-4708bc597699",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Tabela completa Vencidos - Injecta",
+        "height": 352,
+        "width": 1104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        1024
+      ],
+      "typeVersion": 1,
+      "id": "14426158-6fef-4d87-bba8-cf00525a6bf2",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dccc6bac-9c1f-45ae-8ba4-7529d3cab289",
+      "name": "Programar Disparo - D.P.O"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"09\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        192,
+        0
+      ],
+      "id": "fc7bb086-6663-494d-a8c7-afc439113706",
+      "name": "Buscar Títulos Vencidos - D.P.O",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const allData = $input.all();\n\n// Array para armazenar os títulos que atendem ao critério de filtro\nconst titulosParaAlerta = [];\n\n// Itera pelos resultados da requisição HTTP\nallData.forEach(item => {\n    const titulos = item.json.itens;\n\n    if (!titulos || !Array.isArray(titulos)) {\n        console.log('Nenhum título encontrado ou formato inválido.');\n        return; // Pula para a próxima iteração se os dados não estiverem corretos\n    }\n    \n    // Filtra os títulos de acordo com a sua lógica de atraso\n    const hoje = new Date();\n    hoje.setHours(0, 0, 0, 0);\n\n    const titulosVencidos = titulos.filter(titulo => {\n        if (!titulo.vencimento) {\n            return false;\n        }\n\n        const partesData = titulo.vencimento.split('/');\n        const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n        vencimento.setHours(0, 0, 0, 0);\n\n        const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n        const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n        \n        return diasAtraso > 0; // Filtra todos os títulos com qualquer atraso\n    });\n\n    // Se houver títulos vencidos, adiciona ao array principal\n    if (titulosVencidos.length > 0) {\n        titulosVencidos.forEach(titulo => {\n            titulosParaAlerta.push(titulo);\n        });\n    }\n});\n\n// Ordena os títulos por nome do cliente em ordem alfabética\ntitulosParaAlerta.sort((a, b) => a.nome.localeCompare(b.nome));\n\n// Monta o corpo do e-mail em HTML\nlet emailBody = '';\n\nif (titulosParaAlerta.length === 0) {\n    emailBody = `\n        <p style=\"font-family: Arial, sans-serif; font-size: 14px; color: #333;\">\n            ✅ Não há títulos vencidos no momento.\n        </p>\n    `;\n} else {\n    emailBody = `\n        <h2 style=\"font-family: Arial, sans-serif; color: #d9534f;\">\n            🚨 Títulos Vencidos DPO\n        </h2>\n        <p>Prezados,</p>\n        <p>Abaixo a lista completa de títulos vencidos:</p>\n        <table border=\"1\" cellspacing=\"0\" cellpadding=\"8\" style=\"border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; width: 100%;\">\n            <thead style=\"background-color: #f5f5f5;\">\n                <tr>\n                    <th>Empresa</th>\n                    <th>Cliente</th>\n                    <th>Título</th>\n                    <th>Parcela</th>\n                    <th>Vencimento</th>\n                    <th>Valor</th>\n                </tr>\n            </thead>\n            <tbody>\n    `;\n\n    titulosParaAlerta.forEach(titulo => {\n        // Limpa a parcela para exibir apenas números\n        const parcelaLimpa = titulo.parcela ? titulo.parcela.replace(/\\D/g, '') : '';\n\n        emailBody += `\n            <tr>\n                <td>${titulo.empresa || ''}</td>\n                <td>${titulo.nome || ''}</td>\n                <td>${titulo.numero || ''}</td>\n                <td>${parcelaLimpa}</td>\n                <td>${titulo.vencimento || ''}</td>\n                <td>R$ ${titulo.valor || ''}</td>\n            </tr>\n        `;\n    });\n\n    emailBody += `\n            </tbody>\n        </table>\n        <p style=\"font-family: Arial, sans-serif; font-size: 12px; color: #777; margin-top: 10px;\">\n            *Este é um alerta automático. Favor não responder.\n        </p>\n    `;\n}\n\n// Retorna o corpo do e-mail em uma propriedade JSON para o próximo nó\nreturn [{ json: { emailBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        0
+      ],
+      "id": "970fa534-5ba6-440c-949f-13633070461a",
+      "name": "Formatar Títulos Vencidos"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allData = $input.all();\n\n// Array para armazenar os títulos que atendem ao critério de filtro\nconst titulosParaAlerta = [];\n\n// Itera pelos resultados da requisição HTTP\nallData.forEach(item => {\n    const titulos = item.json.itens;\n\n    if (!titulos || !Array.isArray(titulos)) {\n        console.log('Nenhum título encontrado ou formato inválido.');\n        return; // Pula para a próxima iteração se os dados não estiverem corretos\n    }\n    \n    // Filtra os títulos de acordo com a sua lógica de atraso\n    const hoje = new Date();\n    hoje.setHours(0, 0, 0, 0);\n\n    const titulosVencidos = titulos.filter(titulo => {\n        if (!titulo.vencimento) {\n            return false;\n        }\n\n        const partesData = titulo.vencimento.split('/');\n        const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n        vencimento.setHours(0, 0, 0, 0);\n\n        const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n        const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n        \n        return diasAtraso > 0; // Filtra todos os títulos com qualquer atraso\n    });\n\n    // Se houver títulos vencidos, adiciona ao array principal\n    if (titulosVencidos.length > 0) {\n        titulosVencidos.forEach(titulo => {\n            titulosParaAlerta.push(titulo);\n        });\n    }\n});\n\n// Ordena os títulos por nome do cliente em ordem alfabética\ntitulosParaAlerta.sort((a, b) => a.nome.localeCompare(b.nome));\n\n// Monta o corpo do e-mail em HTML\nlet emailBody = '';\n\nif (titulosParaAlerta.length === 0) {\n    emailBody = `\n        <p style=\"font-family: Arial, sans-serif; font-size: 14px; color: #333;\">\n            ✅ Não há títulos vencidos no momento.\n        </p>\n    `;\n} else {\n    emailBody = `\n        <h2 style=\"font-family: Arial, sans-serif; color: #d9534f;\">\n            🚨 Títulos Vencidos BIODINAMICA\n        </h2>\n        <p>Prezados,</p>\n        <p>Abaixo a lista completa de títulos vencidos:</p>\n        <table border=\"1\" cellspacing=\"0\" cellpadding=\"8\" style=\"border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; width: 100%;\">\n            <thead style=\"background-color: #f5f5f5;\">\n                <tr>\n                    <th>Empresa</th>\n                    <th>Cliente</th>\n                    <th>Título</th>\n                    <th>Parcela</th>\n                    <th>Vencimento</th>\n                    <th>Valor</th>\n                </tr>\n            </thead>\n            <tbody>\n    `;\n\n    titulosParaAlerta.forEach(titulo => {\n        // Limpa a parcela para exibir apenas números\n        const parcelaLimpa = titulo.parcela ? titulo.parcela.replace(/\\D/g, '') : '';\n\n        emailBody += `\n            <tr>\n                <td>${titulo.empresa || ''}</td>\n                <td>${titulo.nome || ''}</td>\n                <td>${titulo.numero || ''}</td>\n                <td>${parcelaLimpa}</td>\n                <td>${titulo.vencimento || ''}</td>\n                <td>R$ ${titulo.valor || ''}</td>\n            </tr>\n        `;\n    });\n\n    emailBody += `\n            </tbody>\n        </table>\n        <p style=\"font-family: Arial, sans-serif; font-size: 12px; color: #777; margin-top: 10px;\">\n            *Este é um alerta automático. Favor não responder.\n        </p>\n    `;\n}\n\n// Retorna o corpo do e-mail em uma propriedade JSON para o próximo nó\nreturn [{ json: { emailBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        384
+      ],
+      "id": "5c7b3430-77ee-429a-b629-18faa2d0027f",
+      "name": "Formatar Títulos Vencidos1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allData = $input.all();\n\n// Array para armazenar os títulos que atendem ao critério de filtro\nconst titulosParaAlerta = [];\n\n// Itera pelos resultados da requisição HTTP\nallData.forEach(item => {\n    const titulos = item.json.itens;\n\n    if (!titulos || !Array.isArray(titulos)) {\n        console.log('Nenhum título encontrado ou formato inválido.');\n        return; // Pula para a próxima iteração se os dados não estiverem corretos\n    }\n    \n    // Filtra os títulos de acordo com a sua lógica de atraso\n    const hoje = new Date();\n    hoje.setHours(0, 0, 0, 0);\n\n    const titulosVencidos = titulos.filter(titulo => {\n        if (!titulo.vencimento) {\n            return false;\n        }\n\n        const partesData = titulo.vencimento.split('/');\n        const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n        vencimento.setHours(0, 0, 0, 0);\n\n        const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n        const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n        \n        return diasAtraso > 0; // Filtra todos os títulos com qualquer atraso\n    });\n\n    // Se houver títulos vencidos, adiciona ao array principal\n    if (titulosVencidos.length > 0) {\n        titulosVencidos.forEach(titulo => {\n            titulosParaAlerta.push(titulo);\n        });\n    }\n});\n\n// Ordena os títulos por nome do cliente em ordem alfabética\ntitulosParaAlerta.sort((a, b) => a.nome.localeCompare(b.nome));\n\n// Monta o corpo do e-mail em HTML\nlet emailBody = '';\n\nif (titulosParaAlerta.length === 0) {\n    emailBody = `\n        <p style=\"font-family: Arial, sans-serif; font-size: 14px; color: #333;\">\n            ✅ Não há títulos vencidos no momento.\n        </p>\n    `;\n} else {\n    emailBody = `\n        <h2 style=\"font-family: Arial, sans-serif; color: #d9534f;\">\n            🚨 Títulos Vencidos MULTIBRASIL\n        </h2>\n        <p>Prezados,</p>\n        <p>Abaixo a lista completa de títulos vencidos:</p>\n        <table border=\"1\" cellspacing=\"0\" cellpadding=\"8\" style=\"border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; width: 100%;\">\n            <thead style=\"background-color: #f5f5f5;\">\n                <tr>\n                    <th>Empresa</th>\n                    <th>Cliente</th>\n                    <th>Título</th>\n                    <th>Parcela</th>\n                    <th>Vencimento</th>\n                    <th>Valor</th>\n                </tr>\n            </thead>\n            <tbody>\n    `;\n\n    titulosParaAlerta.forEach(titulo => {\n        // Limpa a parcela para exibir apenas números\n        const parcelaLimpa = titulo.parcela ? titulo.parcela.replace(/\\D/g, '') : '';\n\n        emailBody += `\n            <tr>\n                <td>${titulo.empresa || ''}</td>\n                <td>${titulo.nome || ''}</td>\n                <td>${titulo.numero || ''}</td>\n                <td>${parcelaLimpa}</td>\n                <td>${titulo.vencimento || ''}</td>\n                <td>R$ ${titulo.valor || ''}</td>\n            </tr>\n        `;\n    });\n\n    emailBody += `\n            </tbody>\n        </table>\n        <p style=\"font-family: Arial, sans-serif; font-size: 12px; color: #777; margin-top: 10px;\">\n            *Este é um alerta automático. Favor não responder.\n        </p>\n    `;\n}\n\n// Retorna o corpo do e-mail em uma propriedade JSON para o próximo nó\nreturn [{ json: { emailBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        752
+      ],
+      "id": "ff47b0e0-25f8-49f6-b5dd-81e1214cb7f3",
+      "name": "Formatar Títulos Vencidos2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allData = $input.all();\n\n// Array para armazenar os títulos que atendem ao critério de filtro\nconst titulosParaAlerta = [];\n\n// Itera pelos resultados da requisição HTTP\nallData.forEach(item => {\n    const titulos = item.json.itens;\n\n    if (!titulos || !Array.isArray(titulos)) {\n        console.log('Nenhum título encontrado ou formato inválido.');\n        return; // Pula para a próxima iteração se os dados não estiverem corretos\n    }\n    \n    // Filtra os títulos de acordo com a sua lógica de atraso\n    const hoje = new Date();\n    hoje.setHours(0, 0, 0, 0);\n\n    const titulosVencidos = titulos.filter(titulo => {\n        if (!titulo.vencimento) {\n            return false;\n        }\n\n        const partesData = titulo.vencimento.split('/');\n        const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n        vencimento.setHours(0, 0, 0, 0);\n\n        const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n        const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n        \n        return diasAtraso > 0; // Filtra todos os títulos com qualquer atraso\n    });\n\n    // Se houver títulos vencidos, adiciona ao array principal\n    if (titulosVencidos.length > 0) {\n        titulosVencidos.forEach(titulo => {\n            titulosParaAlerta.push(titulo);\n        });\n    }\n});\n\n// Ordena os títulos por nome do cliente em ordem alfabética\ntitulosParaAlerta.sort((a, b) => a.nome.localeCompare(b.nome));\n\n// Monta o corpo do e-mail em HTML\nlet emailBody = '';\n\nif (titulosParaAlerta.length === 0) {\n    emailBody = `\n        <p style=\"font-family: Arial, sans-serif; font-size: 14px; color: #333;\">\n            ✅ Não há títulos vencidos no momento.\n        </p>\n    `;\n} else {\n    emailBody = `\n        <h2 style=\"font-family: Arial, sans-serif; color: #d9534f;\">\n            🚨 Títulos Vencidos INJECTA\n        </h2>\n        <p>Prezados,</p>\n        <p>Abaixo a lista completa de títulos vencidos:</p>\n        <table border=\"1\" cellspacing=\"0\" cellpadding=\"8\" style=\"border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; width: 100%;\">\n            <thead style=\"background-color: #f5f5f5;\">\n                <tr>\n                    <th>Empresa</th>\n                    <th>Cliente</th>\n                    <th>Título</th>\n                    <th>Parcela</th>\n                    <th>Vencimento</th>\n                    <th>Valor</th>\n                </tr>\n            </thead>\n            <tbody>\n    `;\n\n    titulosParaAlerta.forEach(titulo => {\n        // Limpa a parcela para exibir apenas números\n        const parcelaLimpa = titulo.parcela ? titulo.parcela.replace(/\\D/g, '') : '';\n\n        emailBody += `\n            <tr>\n                <td>${titulo.empresa || ''}</td>\n                <td>${titulo.nome || ''}</td>\n                <td>${titulo.numero || ''}</td>\n                <td>${parcelaLimpa}</td>\n                <td>${titulo.vencimento || ''}</td>\n                <td>R$ ${titulo.valor || ''}</td>\n            </tr>\n        `;\n    });\n\n    emailBody += `\n            </tbody>\n        </table>\n        <p style=\"font-family: Arial, sans-serif; font-size: 12px; color: #777; margin-top: 10px;\">\n            *Este é um alerta automático. Favor não responder.\n        </p>\n    `;\n}\n\n// Retorna o corpo do e-mail em uma propriedade JSON para o próximo nó\nreturn [{ json: { emailBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        1136
+      ],
+      "id": "7e173a57-153f-4f64-90b8-58e117655240",
+      "name": "Formatar Títulos Vencidos3"
+    },
+    {
+      "parameters": {
+        "fromEmail": "Vencidos DPO <pagamentos@oraltech.com.br>",
+        "toEmail": "ti03@biodinamica.com.br",
+        "subject": "TÍTULOS VENCIDOS - DPO",
+        "html": "=<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;\">\n  \n  \n  <p>Verificamos no sistema que não houve o pagamento do(s) título(s) discriminado(s) abaixo, referente aos clientess da empresa: <b>D.P.O. IMPORTAÇÃO EXPORTAÇÃO E COM DE PROD ODONT EIRELI.</b></p>\n  \n  <p style=\"margin-top: 25px; margin-bottom: 5px; font-weight: bold;\">Detalhes do(s) Título(s) Vencido(s):</p>\n  \n  <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 20px;\">\n    <thead>\n      <tr style=\"background-color: #f2f2f2; text-align: left;\">\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Número</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Parcela</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Vencimento</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Valor</th>\n      </tr>\n    </thead>\n    <tbody>\n      {{ $json.titulos.map(titulo => `\n      <tr style=\"background-color: ${$index % 2 === 0 ? '#ffffff' : '#f9f9f9'};\">\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.numero}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.parcela}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.vencimento}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.valor}</td>\n      </tr>\n      `).join('') }}\n    </tbody>\n  </table>\n  \n  <p>Em caso de dúvidas, ou se houve algum atraso na entrega da mercadoria ou devolução, por favor, responda a este e-mail ou entre em contato conosco pelo WhatsApp (43) 3178-7000 (Opção 4 - Financeiro).</p>\n  \n  <p>Informamos também que nossos boletos podem ser visualizados no DDA do seu banco.</p>\n  \n  <p style=\"font-style: italic; margin-top: 25px;\">Caso já tenha realizado o pagamento, favor desconsiderar este e-mail.</p>\n</div>\n<b>GN INJECTA COM MAT MED CIR ODONT DESC LTDA.</b>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        576,
+        0
+      ],
+      "id": "09947469-808f-4794-9c97-6b20930dbe32",
+      "name": "Enviar Email - Tabela Vencidos - D.P.O",
+      "webhookId": "89bc4001-518d-4905-8591-f81204e7b7aa",
+      "credentials": {
+        "smtp": {
+          "id": "P6mgBeYKWxGbxEdu",
+          "name": "pagamentos@oraltech.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        384
+      ],
+      "id": "1f26d3e8-33ce-4013-b6a4-a1193eeee4d7",
+      "name": "Programar Disparo - BIODINÂMICA"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"01\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        384
+      ],
+      "id": "84bb6eca-6258-4cd2-bb3f-c164822078d0",
+      "name": "Buscar Títulos Vencidos - BIODINÂMICA",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        752
+      ],
+      "id": "d1c6efc5-38d0-4c4b-a88d-c7aba8906560",
+      "name": "Programar Disparo - MULTIBRASIL"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"04\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        192,
+        752
+      ],
+      "id": "80451507-3408-4040-9035-01a6eed28e88",
+      "name": "Buscar Títulos Vencidos -MULTIBRASIL",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Vencidos MultiBrasil <pagamentos@biodinamica.com.br>",
+        "toEmail": "gti@biodinamica.com.br, ti03@biodinamica.com.br",
+        "subject": "TÍTULOS VENCIDOS - {{ $json.titulos[0].nome }}",
+        "html": "=<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;\">\n  \n  \n  <p>Verificamos no sistema que não houve o pagamento do(s) título(s) discriminado(s) abaixo, referente aos clientess da empresa: <b>MULTIBRASIL COMÉRCIO EXPORTAÇÃO & IMPORTAÇÃO LTDA.</b></p>\n  \n  <p style=\"margin-top: 25px; margin-bottom: 5px; font-weight: bold;\">Detalhes do(s) Título(s) Vencido(s):</p>\n  \n  <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 20px;\">\n    <thead>\n      <tr style=\"background-color: #f2f2f2; text-align: left;\">\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Número</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Parcela</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Vencimento</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Valor</th>\n      </tr>\n    </thead>\n    <tbody>\n      {{ $json.titulos.map(titulo => `\n      <tr style=\"background-color: ${$index % 2 === 0 ? '#ffffff' : '#f9f9f9'};\">\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.numero}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.parcela}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.vencimento}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.valor}</td>\n      </tr>\n      `).join('') }}\n    </tbody>\n  </table>\n  \n  <p>Em caso de dúvidas, ou se houve algum atraso na entrega da mercadoria ou devolução, por favor, responda a este e-mail ou entre em contato conosco pelo WhatsApp (43) 3178-7000 (Opção 4 - Financeiro).</p>\n  \n  <p>Informamos também que nossos boletos podem ser visualizados no DDA do seu banco.</p>\n  \n  <p style=\"font-style: italic; margin-top: 25px;\">Caso já tenha realizado o pagamento, favor desconsiderar este e-mail.</p>\n</div>\n<b>GN INJECTA COM MAT MED CIR ODONT DESC LTDA.</b>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        576,
+        752
+      ],
+      "id": "1deab642-480a-40d1-9998-8073d6d53361",
+      "name": "Enviar Email - Tabela Vencidos - MULTIBRASIL1",
+      "webhookId": "89bc4001-518d-4905-8591-f81204e7b7aa",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Vencidos Biodinâmica <pagamentos@biodinamica.com.br>",
+        "toEmail": "gti@biodinamica.com.br, ti03@biodinamica.com.br",
+        "subject": "TÍTULOS VENCIDOS - {{ $json.titulos[0].nome }}",
+        "html": "=<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;\">\n  \n  \n  <p>Verificamos no sistema que não houve o pagamento do(s) título(s) discriminado(s) abaixo, referente aos clientess da empresa: <b>BIODINÂMICA QUÍMICA E FARMACÊUTICA LTDA.</b></p>\n  \n  <p style=\"margin-top: 25px; margin-bottom: 5px; font-weight: bold;\">Detalhes do(s) Título(s) Vencido(s):</p>\n  \n  <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 20px;\">\n    <thead>\n      <tr style=\"background-color: #f2f2f2; text-align: left;\">\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Número</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Parcela</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Vencimento</th>\n        <th style=\"padding: 12px; border: 1px solid #ddd;\">Valor</th>\n      </tr>\n    </thead>\n    <tbody>\n      {{ $json.titulos.map(titulo => `\n      <tr style=\"background-color: ${$index % 2 === 0 ? '#ffffff' : '#f9f9f9'};\">\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.numero}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.parcela}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.vencimento}</td>\n        <td style=\"padding: 12px; border: 1px solid #ddd;\">${titulo.valor}</td>\n      </tr>\n      `).join('') }}\n    </tbody>\n  </table>\n  \n  <p>Em caso de dúvidas, ou se houve algum atraso na entrega da mercadoria ou devolução, por favor, responda a este e-mail ou entre em contato conosco pelo WhatsApp (43) 3178-7000 (Opção 4 - Financeiro).</p>\n  \n  <p>Informamos também que nossos boletos podem ser visualizados no DDA do seu banco.</p>\n  \n  <p style=\"font-style: italic; margin-top: 25px;\">Caso já tenha realizado o pagamento, favor desconsiderar este e-mail.</p>\n</div>\n<b>GN INJECTA COM MAT MED CIR ODONT DESC LTDA.</b>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        384
+      ],
+      "id": "344da79c-e24d-4b89-abd2-472e7ec841af",
+      "name": "Enviar Email - Tabela Vencidos - BIODINÂMICA",
+      "webhookId": "89bc4001-518d-4905-8591-f81204e7b7aa",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        1136
+      ],
+      "id": "97e45b16-0acb-4cb2-bc84-4b7a31140337",
+      "name": "Programar Disparo - INJECTA"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"11\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        1136
+      ],
+      "id": "42ae2ff3-da4a-4527-b5ad-a9ca3ad28280",
+      "name": "Buscar Títulos Vencidos - INJECTA",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Vencidos injecta <pagamentos@Injecta.com.br>",
+        "toEmail": "ti03@biodinamica.com.br, gti@biodinamica.com.br",
+        "subject": "TÍTULOS VENCIDOS - INJECTA",
+        "html": "={{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        1136
+      ],
+      "id": "d46545d1-40ea-4164-bc08-a35972227f81",
+      "name": "Enviar Email - Tabela Vencidos - INJECTA",
+      "webhookId": "89bc4001-518d-4905-8591-f81204e7b7aa",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Programar Disparo - D.P.O": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos - D.P.O",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos - D.P.O": {
+      "main": [
+        [
+          {
+            "node": "Formatar Títulos Vencidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Títulos Vencidos": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email - Tabela Vencidos - D.P.O",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Títulos Vencidos1": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email - Tabela Vencidos - BIODINÂMICA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Títulos Vencidos2": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email - Tabela Vencidos - MULTIBRASIL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Títulos Vencidos3": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email - Tabela Vencidos - INJECTA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programar Disparo - BIODINÂMICA": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos - BIODINÂMICA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos - BIODINÂMICA": {
+      "main": [
+        [
+          {
+            "node": "Formatar Títulos Vencidos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programar Disparo - MULTIBRASIL": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos -MULTIBRASIL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos -MULTIBRASIL": {
+      "main": [
+        [
+          {
+            "node": "Formatar Títulos Vencidos2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programar Disparo - INJECTA": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos - INJECTA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos - INJECTA": {
+      "main": [
+        [
+          {
+            "node": "Formatar Títulos Vencidos3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "86a4ea9c-b36b-4f80-b402-ea62856da21e",
+  "meta": {
+    "instanceId": "a7d7cc7c99f3590112d0e66b8873c6d63f4bfdd5a8c03f41710a3ed40c077aeb"
+  },
+  "id": "2NWrEWRudDdW2m4g",
+  "tags": []
+}

@@ -1,0 +1,134 @@
+{
+  "name": "Disparo de email",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        848,
+        -64
+      ],
+      "id": "5fb54bd2-0edb-4d33-a5c3-37314210a5f1",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/dpopro01",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"itens\": [\n    {\n      \"id\": \"\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        -64
+      ],
+      "id": "44241934-af6c-4e3a-a5a4-afdd9754a111",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const allData = $input.all();\nconst lowStockProducts = [];\n\n// Itera pelos resultados do HTTP Request\nallData.forEach(entry => {\n  const products = entry.json.itens || entry.json.items;\n  if (products && Array.isArray(products)) {\n    products.forEach(product => {\n      const estoque = Number(product.estoque);\n      if (!isNaN(estoque) && estoque <= 3) {\n        lowStockProducts.push(product);\n      }\n    });\n  }\n});\n\n// Ordena a lista de produtos com estoque baixo em ordem alfabética pela descrição\nlowStockProducts.sort((a, b) => a.descricao.localeCompare(b.descricao));\n\n// Monta corpo do e-mail em HTML\nlet emailBody = '';\n\nif (lowStockProducts.length === 0) {\n  emailBody = `\n    <p style=\"font-family: Arial, sans-serif; font-size: 14px; color: #333;\">\n      ✅ Não há produtos com estoque baixo no momento.\n    </p>\n  `;\n} else {\n  emailBody = `\n    <h2 style=\"font-family: Arial, sans-serif; color: #d9534f;\">\n      🚨 Produtos com Estoque Baixo Empresa DPO\n    </h2>\n    <table border=\"1\" cellspacing=\"0\" cellpadding=\"8\" style=\"border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; width: 100%;\">\n      <thead style=\"background-color: #f5f5f5;\">\n        <tr>\n          <th>Produto</th>\n          <th>Código</th>\n          <th>Estoque</th>\n          <th>Preço</th>\n        </tr>\n      </thead>\n      <tbody>\n  `;\n\n  lowStockProducts.forEach(product => {\n    emailBody += `\n      <tr>\n        <td>${product.descricao}</td>\n        <td>${product.id}</td>\n        <td style=\"color: red; font-weight: bold;\">${product.estoque}</td>\n        <td>R$ ${product.preco}</td>\n      </tr>\n    `;\n  });\n\n  emailBody += `\n      </tbody>\n    </table>\n    <p style=\"font-family: Arial, sans-serif; font-size: 12px; color: #777; margin-top: 10px;\">\n      *Este é um alerta automático enviado pelo sistema n8n.\n    </p>\n  `;\n}\n\nreturn [{ json: { emailBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        -64
+      ],
+      "id": "ce39da67-ffa1-4d43-accf-caa2a614d610",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "fromEmail": "Estoque DPO <pagamentos@biodinamica.com.br>",
+        "toEmail": "ti03@biodinamica.com.br, gti@biodinamica.com.br",
+        "subject": "=Alerta de Estoque Baixo  {{ $json.descricao }}",
+        "html": "={{ $json.emailBody }}\n\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        -64
+      ],
+      "id": "6a6f3ccf-1c5d-4336-b2f9-5f8ec07f7e94",
+      "name": "Send email",
+      "webhookId": "58f08931-7899-4d2e-b565-da76e9880394",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7f9775dd-9b2a-46ce-94cb-147db4d25396",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a7d7cc7c99f3590112d0e66b8873c6d63f4bfdd5a8c03f41710a3ed40c077aeb"
+  },
+  "id": "dUiy2UCikdwMUcXn",
+  "tags": []
+}

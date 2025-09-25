@@ -1,0 +1,1278 @@
+{
+  "name": "Disparo - financeiro - 4 empresas",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Envio de alertas titulos vencidos DPO\n",
+        "height": 496,
+        "width": 1600,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -16
+      ],
+      "id": "1fe1fc2f-bbef-4e25-a312-efaa3e013fe3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        768,
+        288
+      ],
+      "id": "6373167a-7b53-4d0b-ba46-0b246be08358"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me1",
+      "typeVersion": 1,
+      "position": [
+        768,
+        800
+      ],
+      "id": "babab926-d240-4cd8-a994-1cfd2f5bc9bc"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me2",
+      "typeVersion": 1,
+      "position": [
+        768,
+        1312
+      ],
+      "id": "ac8f34ea-0173-43a9-91ba-9f196dd453a4"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        544,
+        1824
+      ],
+      "id": "e724f1e4-ae7d-4591-9995-222221e36738",
+      "name": "Loop Over Items3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me3",
+      "typeVersion": 1,
+      "position": [
+        768,
+        1872
+      ],
+      "id": "50409bad-5db3-49e8-9044-eb3628d5cf53"
+    },
+    {
+      "parameters": {
+        "content": "Envio de alertas titulos vencidos BIODINAMICA",
+        "height": 496,
+        "width": 1600,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        496
+      ],
+      "id": "ea0e75ae-ceb4-402e-86eb-e32670783dc4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Envio de alertas titulos vencidos MULTIBRASIL",
+        "height": 528,
+        "width": 1600
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -192,
+        1008
+      ],
+      "typeVersion": 1,
+      "id": "512f57c7-faa1-4d62-ba16-30daa895e56f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Envio de alertas titulos vencidos INJECTA",
+        "height": 560,
+        "width": 1600,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -192,
+        1552
+      ],
+      "typeVersion": 1,
+      "id": "e58d9bc5-9932-458c-93b1-046e936bf482",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Biodinâmica <pagamentos@biodinamica.com.br>",
+        "toEmail": "ti03@biodinamica.com.br, sti@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS {{ $json.nome }} - {{ $json.numero}}",
+        "html": "=<div style=\"font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 650px; margin: auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);\">\n\n  <div style=\"text-align: center; margin-bottom: 25px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 200px;\">\n  </div>\n  \n  <h2 style=\"color: #0056b3; text-align: center; margin-bottom: 25px;\">Lembrete de Título Vencido</h2>\n  \n  <p>Prezado(a) Cliente <b>{{ $json.nome }}</b>,</p>\n  <p>Verificamos em nosso sistema que o título abaixo encontra-se em atraso. Para evitar a incidência de juros e encargos adicionais, solicitamos a sua atenção para regularizar o pagamento o mais breve possível.</p>\n  \n  <div style=\"margin: 30px 0; border: 1px solid #c0c0c0; border-radius: 8px; padding: 20px; background-color: #f9f9f9;\">\n    <h3 style=\"margin-top: 0; color: #0056b3;\">Detalhes do Título:</h3>\n    <table style=\"width: 100%; border-collapse: collapse;\">\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Número:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.numero }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Parcela:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.parcela }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Vencimento:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.vencimento }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; font-weight: bold;\">Valor:</td>\n        <td style=\"padding: 10px;\">{{ $json.valor }}</td>\n      </tr>\n    </table>\n  </div>\n  \n  <p style=\"text-align: center; font-style: italic; color: #555;\">Caso o pagamento já tenha sido efetuado, por favor, desconsidere este e-mail.</p>\n  \n  <div style=\"text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;\">\n    <p>Em caso de dúvidas ou para renegociação, entre em contato:</p>\n    <ul style=\"list-style-type: none; padding: 0;\">\n      <li style=\"margin-bottom: 10px;\"><b>E-mail:</b> <a href=\"mailto:receber@biodinamica.com.br\" style=\"color: #0056b3; text-decoration: none;\">receber@biodinamica.com.br</a></li>\n      <li><b>WhatsApp:</b> (43) 3178-7000 (Opção 4 - Financeiro)</li>\n    </ul>\n  </div>\n\n  <div style=\"text-align: center; font-size: 14px; color: #777; margin-top: 25px;\">\n    <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;\">\n    <p style=\"margin-top: 10px;\">\n      <strong>BIODINÂMICA QUÍMICA E FARMACÊUTICA LTDA</strong><br>\n      CNPJ: 84.833.888/0001-33\n    </p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        528
+      ],
+      "id": "07e1484e-4ab1-4747-bb7b-7e4074d925bb",
+      "name": "Aviso 1 dia - Empresa 01",
+      "webhookId": "d6ab519d-9160-4738-b5e5-1addef1f4a96",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Oraltech <pagamentos@oraltech.com.br>",
+        "toEmail": "ti03@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS {{ $json.nome }} - {{ $json.numero}}",
+        "html": "=<div style=\"font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 650px; margin: auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);\">\n\n  <div style=\"text-align: center; margin-bottom: 25px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 200px;\">\n  </div>\n  \n  <h2 style=\"color: #0056b3; text-align: center; margin-bottom: 25px;\">Lembrete de Título Vencido</h2>\n  \n  <p>Prezado(a) Cliente <b>{{ $json.nome }}</b>,</p>\n  <p>Verificamos em nosso sistema que o título abaixo encontra-se em atraso. Para evitar a incidência de juros e encargos adicionais, solicitamos a sua atenção para regularizar o pagamento o mais breve possível.</p>\n  \n  <div style=\"margin: 30px 0; border: 1px solid #c0c0c0; border-radius: 8px; padding: 20px; background-color: #f9f9f9;\">\n    <h3 style=\"margin-top: 0; color: #0056b3;\">Detalhes do Título:</h3>\n    <table style=\"width: 100%; border-collapse: collapse;\">\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Número:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.numero }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Parcela:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.parcela }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Vencimento:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.vencimento }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; font-weight: bold;\">Valor:</td>\n        <td style=\"padding: 10px;\">{{ $json.valor }}</td>\n      </tr>\n    </table>\n  </div>\n  \n  <p style=\"text-align: center; font-style: italic; color: #555;\">Caso o pagamento já tenha sido efetuado, por favor, desconsidere este e-mail.</p>\n  \n  <div style=\"text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;\">\n    <p>Em caso de dúvidas ou para renegociação, entre em contato:</p>\n    <ul style=\"list-style-type: none; padding: 0;\">\n      <li style=\"margin-bottom: 10px;\"><b>E-mail:</b> <a href=\"mailto:receber@biodinamica.com.br\" style=\"color: #0056b3; text-decoration: none;\">receber@biodinamica.com.br</a></li>\n      <li><b>WhatsApp:</b> (43) 3178-7000 (Opção 4 - Financeiro)</li>\n    </ul>\n  </div>\n\n  <div style=\"text-align: center; font-size: 14px; color: #777; margin-top: 25px;\">\n    <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;\">\n    <p style=\"margin-top: 10px;\">\n      <strong>D.P.O. IMPORTAÇÃO EXPORTAÇÃO E COM DE PROD ODONT EIRELI</strong><br>\n      CNPJ: 00.969.561/0001-01\n    </p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        16
+      ],
+      "id": "1c395d51-22b8-49d1-8e07-e447fbab1a94",
+      "name": "Aviso 1 dia - Empresa 09",
+      "webhookId": "9c385d83-c779-4ddf-93d6-75f663ad330b",
+      "credentials": {
+        "smtp": {
+          "id": "P6mgBeYKWxGbxEdu",
+          "name": "pagamentos@oraltech.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Multibrasil <pagamentos@biodinamica.com.br>",
+        "toEmail": "ti03@biodinamica.com.br, gti@biodinamica.com.br, sti@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS {{ $json.nome }} - {{ $json.numero}}",
+        "html": "=<div style=\"font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 650px; margin: auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);\">\n\n  <div style=\"text-align: center; margin-bottom: 25px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 200px;\">\n  </div>\n  \n  <h2 style=\"color: #0056b3; text-align: center; margin-bottom: 25px;\">Lembrete de Título Vencido</h2>\n  \n  <p>Prezado(a) Cliente <b>{{ $json.nome }}</b>,</p>\n  <p>Verificamos em nosso sistema que o título abaixo encontra-se em atraso. Para evitar a incidência de juros e encargos adicionais, solicitamos a sua atenção para regularizar o pagamento o mais breve possível.</p>\n  \n  <div style=\"margin: 30px 0; border: 1px solid #c0c0c0; border-radius: 8px; padding: 20px; background-color: #f9f9f9;\">\n    <h3 style=\"margin-top: 0; color: #0056b3;\">Detalhes do Título:</h3>\n    <table style=\"width: 100%; border-collapse: collapse;\">\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Número:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.numero }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Parcela:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.parcela }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Vencimento:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.vencimento }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; font-weight: bold;\">Valor:</td>\n        <td style=\"padding: 10px;\">{{ $json.valor }}</td>\n      </tr>\n    </table>\n  </div>\n  \n  <p style=\"text-align: center; font-style: italic; color: #555;\">Caso o pagamento já tenha sido efetuado, por favor, desconsidere este e-mail.</p>\n  \n  <div style=\"text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;\">\n    <p>Em caso de dúvidas ou para renegociação, entre em contato:</p>\n    <ul style=\"list-style-type: none; padding: 0;\">\n      <li style=\"margin-bottom: 10px;\"><b>E-mail:</b> <a href=\"mailto:receber@biodinamica.com.br\" style=\"color: #0056b3; text-decoration: none;\">receber@biodinamica.com.br</a></li>\n      <li><b>WhatsApp:</b> (43) 3178-7000 (Opção 4 - Financeiro)</li>\n    </ul>\n  </div>\n\n  <div style=\"text-align: center; font-size: 14px; color: #777; margin-top: 25px;\">\n    <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;\">\n    <p style=\"margin-top: 10px;\">\n      <strong>MULTIBRASIL COMÉRCIO EXPORTAÇÃO & IMPORTAÇÃO LTDA</strong><br>\n      CNPJ: 02.338.617/0001-47\n    </p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        1040
+      ],
+      "id": "a1853256-1386-44fc-bf76-fcf597cde039",
+      "name": "Aviso 1 dia - Empresa 04",
+      "webhookId": "d3b14f65-0dd2-41be-8b22-17b935fec22c",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Injecta <pagamentos@injecta.com.br>",
+        "toEmail": "ti03@biodinamica.com.br, gti@biodinamica.com.br, sti@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS {{ $json.nome }} - {{ $json.numero}}",
+        "html": "=<div style=\"font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 650px; margin: auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);\">\n\n  <div style=\"text-align: center; margin-bottom: 25px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 200px;\">\n  </div>\n  \n  <h2 style=\"color: #0056b3; text-align: center; margin-bottom: 25px;\">Lembrete de Título Vencido</h2>\n  \n  <p>Prezado(a) Cliente <b>{{ $json.nome }}</b>,</p>\n  <p>Verificamos em nosso sistema que o título abaixo encontra-se em atraso. Para evitar a incidência de juros e encargos adicionais, solicitamos a sua atenção para regularizar o pagamento o mais breve possível.</p>\n  \n  <div style=\"margin: 30px 0; border: 1px solid #c0c0c0; border-radius: 8px; padding: 20px; background-color: #f9f9f9;\">\n    <h3 style=\"margin-top: 0; color: #0056b3;\">Detalhes do Título:</h3>\n    <table style=\"width: 100%; border-collapse: collapse;\">\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Número:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.numero }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Parcela:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.parcela }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;\">Vencimento:</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $json.vencimento }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; font-weight: bold;\">Valor:</td>\n        <td style=\"padding: 10px;\">{{ $json.valor }}</td>\n      </tr>\n    </table>\n  </div>\n  \n  <p style=\"text-align: center; font-style: italic; color: #555;\">Caso o pagamento já tenha sido efetuado, por favor, desconsidere este e-mail.</p>\n  \n  <div style=\"text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;\">\n    <p>Em caso de dúvidas ou para renegociação, entre em contato:</p>\n    <ul style=\"list-style-type: none; padding: 0;\">\n      <li style=\"margin-bottom: 10px;\"><b>E-mail:</b> <a href=\"mailto:receber@biodinamica.com.br\" style=\"color: #0056b3; text-decoration: none;\">receber@biodinamica.com.br</a></li>\n      <li><b>WhatsApp:</b> (43) 3178-7000 (Opção 4 - Financeiro)</li>\n    </ul>\n  </div>\n\n  <div style=\"text-align: center; font-size: 14px; color: #777; margin-top: 25px;\">\n    <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;\">\n    <p style=\"margin-top: 10px;\">\n      <strong>GN INJECTA IND. COM MAT MÉD. CIR. OD. DESC. LTDA</strong><br>\n      CNPJ: 58.188.194/0002-61\n    </p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        1616
+      ],
+      "id": "b117cfd0-5bad-4412-9694-d8a07bf11d49",
+      "name": "Aviso 1 dia - Empresa 11",
+      "webhookId": "db58e7ba-47aa-43a4-a75d-f389cdf68b5f",
+      "credentials": {
+        "smtp": {
+          "id": "5vExkKQkQI5zx3MS",
+          "name": "pagamentos@injecta.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Oraltech <pagamentos@oraltech.com.br>",
+        "toEmail": "ti03@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS - {{ $json.numero }} - {{ $json.nome }}",
+        "html": "=<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;\">\n\n  <div style=\"text-align: center; margin-bottom: 20px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 250px;\">\n  </div>\n\n  <p>Prezado(a) Cliente <b>{{ $json.nome }}</b>,</p>\n\n  <p>Informamos que seu título <b>{{ $json.numero }}</b>, com vencimento em <b>{{ $json.vencimento }}</b>, encontra-se em atraso há mais de 18 dias.</p>\n  \n  <p>Para evitar o protesto do título e a negativação do seu CPF/CNPJ junto aos órgãos de proteção ao crédito (SPC/Serasa), solicitamos a sua atenção para regularizar o pagamento em até 2 dias.</p>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <p style=\"font-weight: bold; font-size: 18px; color: #c0392b;\">AÇÃO NECESSÁRIA</p>\n  \n  <p>Caso já tenha efetuado o pagamento, por favor, desconsidere este e-mail.</p>\n  \n  <p>Para dúvidas ou renegociação, entre em contato imediatamente com o setor financeiro através dos seguintes canais:</p>\n  \n  <ul>,\n    <li><b>E-mail:</b> receber@biodinamica.com.br</li>\n    <li><b>WhatsApp:</b> (43) 3178-7000 (Financeiro - Opção 4)</li>\n  </ul>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <div style=\"text-align: center; font-size: 14px; color: #777;\">\n    <p>\n      <strong>D.P.O. IMPORTAÇÃO EXPORTAÇÃO E COM DE PROD ODONT EIRELI</strong><br>\n      CNPJ: 00.969.561/0001-01<br>\n\n    </p>\n  </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        208
+      ],
+      "id": "579ca94a-315d-447a-a1ab-f3d4ae91de12",
+      "name": "Atraso 18 dias - Empresa 09",
+      "webhookId": "70bba522-85d0-4bf7-a4eb-f56fc11a5d13",
+      "credentials": {
+        "smtp": {
+          "id": "P6mgBeYKWxGbxEdu",
+          "name": "pagamentos@oraltech.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Biodinâmica <pagamentos@biodinamica.com.br>",
+        "toEmail": "=ti03@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS - {{ $json.numero }} - {{ $json.nome }}",
+        "html": "=<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;\">\n\n  <div style=\"text-align: center; margin-bottom: 20px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 250px;\">\n  </div>\n\n  <p>Prezado(a) <b>{{ $json.nome }}</b>,</p>\n\n  <p>Informamos que seu título <b>{{ $json.numero }}</b>, com vencimento em <b>{{ $json.vencimento }}</b>, encontra-se em atraso há mais de 18 dias.</p>\n  \n  <p>Para evitar o protesto do título e a negativação do seu CPF/CNPJ junto aos órgãos de proteção ao crédito (SPC/Serasa), solicitamos a sua atenção para regularizar o pagamento em até 2 dias.</p>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <p style=\"font-weight: bold; font-size: 18px; color: #c0392b;\">AÇÃO NECESSÁRIA</p>\n  \n  <p>Caso já tenha efetuado o pagamento, por favor, desconsidere este e-mail.</p>\n  \n  <p>Para dúvidas ou renegociação, entre em contato imediatamente com o setor financeiro através dos seguintes canais:</p>\n  \n  <ul>\n    <li><b>E-mail:</b> receber@biodinamica.com.br</li>\n    <li><b>WhatsApp:</b> (43) 3178-7000 (Financeiro - opção 4)</li>\n  </ul>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <div style=\"text-align: center; font-size: 14px; color: #777;\">\n    <p>\n      <strong>BIODINÂMICA QUÍMICA E FARMACÊUTICA LTDA</strong><br>\n      CNPJ: 84.833.888/0001-33<br>\n    </p>\n  </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        784
+      ],
+      "id": "8245c663-c48f-4304-bcf0-c57d5ffcd2ac",
+      "name": "Atraso 18 dias - Empresa 01",
+      "webhookId": "db190754-c9bf-4fe1-9eae-d67cea930b22",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Multibrasil <pagamentos@biodinamica.com.br>",
+        "toEmail": "ti03@biodinamica.com.br, gti@biodinamica.com.br, sti@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS - {{ $json.numero }} - {{ $json.nome }}",
+        "html": "=<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;\">\n\n  <div style=\"text-align: center; margin-bottom: 20px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 250px;\">\n  </div>\n\n  <p>Prezado(a) Cliente <b>{{ $json.nome }}</b>,</p>\n\n  <p>Informamos que seu título <b>{{ $json.numero }}</b>, com vencimento em <b>{{ $json.vencimento }}</b>, encontra-se em atraso há mais de 18 dias.</p>\n  \n  <p>Para evitar o protesto do título e a negativação do seu CPF/CNPJ junto aos órgãos de proteção ao crédito (SPC/Serasa), solicitamos a sua atenção para regularizar o pagamento em até 2 dias.</p>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <p style=\"font-weight: bold; font-size: 18px; color: #c0392b;\">AÇÃO NECESSÁRIA</p>\n  \n  <p>Caso já tenha efetuado o pagamento, por favor, desconsidere este e-mail.</p>\n  \n  <p>Para dúvidas ou renegociação, entre em contato imediatamente com o setor financeiro através dos seguintes canais:</p>\n  \n  <ul>\n    <li><b>E-mail:</b> receber@biodinamica.com.br</li>\n    <li><b>WhatsApp:</b> (43) 3178-7000 (Financeiro - Opção 4)</li>\n  </ul>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <div style=\"text-align: center; font-size: 14px; color: #777;\">\n    <p>\n      <strong>MULTIBRASIL COMÉRCIO EXPORTAÇÃO & IMPORTAÇÃO LTDA</strong><br>\n      CNPJ: 02.338.617/0001-47<br>\n    </p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        1264
+      ],
+      "id": "24130841-2ab4-4be1-b635-d38a75efa1fa",
+      "name": "Atraso 18 dias - Empresa 04",
+      "webhookId": "2f6190ca-ce0c-42e1-acf0-ad0227662be5",
+      "credentials": {
+        "smtp": {
+          "id": "zWoDUjigfOqnvajK",
+          "name": "pagamentos@biodinamica.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "Financeiro Injecta <pagamentos@injecta.com.br>",
+        "toEmail": "ti03@biodinamica.com.br, gti@biodinamica.com.br, sti@biodinamica.com.br",
+        "subject": "=TÍTULOS VENCIDOS - {{ $json.numero }} - {{ $json.nome }}",
+        "html": "=<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;\">\n\n  <div style=\"text-align: center; margin-bottom: 20px;\">\n    <img src=\"https://biodinamica.com.br/infogrupo/Selo_Grupo_Biodinamica.png\" alt=\"Logo Grupo Biodinâmica\" style=\"max-width: 250px;\">\n  </div>\n\n  <p>Prezado(a) Cliente <b>{{ $json.nome }}</b>,</p>\n\n  <p>Informamos que seu título <b>{{ $json.numero }}</b>, com vencimento em <b>{{ $json.vencimento }}</b>, encontra-se em atraso há mais de 18 dias.</p>\n  \n  <p>Para evitar o protesto do título e a negativação do seu CPF/CNPJ junto aos órgãos de proteção ao crédito (SPC/Serasa), solicitamos a sua atenção para regularizar o pagamento em até 2 dias.</p>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <p style=\"font-weight: bold; font-size: 18px; color: #c0392b;\">**AÇÃO NECESSÁRIA**</p>\n  \n  <p>Caso já tenha efetuado o pagamento, por favor, desconsidere este e-mail.</p>\n  \n  <p>Para dúvidas ou renegociação, entre em contato imediatamente com o setor financeiro através dos seguintes canais:</p>\n  \n  <ul>\n    <li><b>E-mail:</b> receber@biodinamica.com.br</li>\n    <li><b>WhatsApp:</b> (43) 3178-7000 (Financeiro - Opção 4)</li>\n  </ul>\n  \n  <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">\n  \n  <div style=\"text-align: center; font-size: 14px; color: #777;\">\n    <p>\n      <strong>GN INJECTA IND. COM MAT MÉD. CIR. OD. DESC. LTDA</strong><br>\n      CNPJ: 58.188.194/0002-61<br>\n    </p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1216,
+        1824
+      ],
+      "id": "dfed7d20-c42d-4c6e-bd54-3ad918cbc50e",
+      "name": "Atraso 18 dias - Empresa 11",
+      "webhookId": "270d4c87-cb79-4e1e-bdc4-797b66f18e30",
+      "credentials": {
+        "smtp": {
+          "id": "5vExkKQkQI5zx3MS",
+          "name": "pagamentos@injecta.com.br"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        240
+      ],
+      "id": "683a4cdb-dda0-44b7-8dc1-db50cdf12c28",
+      "name": "Programar Disparo - D.P.O"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"09\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        96,
+        240
+      ],
+      "id": "52aefa5d-0883-4a81-8134-5df24a1c8e89",
+      "name": "Buscar Títulos Vencidos - D.P.O",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.flatMap(item => {\n  const titulos = item.json.itens;\n\n  if (!titulos || !Array.isArray(titulos)) {\n    console.log('Nenhum título encontrado ou formato inválido.');\n    return [{ json: { error: 'Nenhum título encontrado ou formato inválido.' } }];\n  }\n\n  const hoje = new Date();\n  hoje.setHours(0, 0, 0, 0);\n\n  const titulosParaAlerta = titulos.filter(titulo => {\n    if (!titulo.vencimento) {\n      console.log('Título sem data de vencimento:', titulo);\n      return false;\n    }\n    \n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n    \n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    console.log(`Título: ${titulo.numero}, Vencimento: ${titulo.vencimento}, Dias de Atraso: ${diasAtraso}`);\n    \n    return diasAtraso === 1 || diasAtraso === 18;\n  });\n\n  if (titulosParaAlerta.length === 0) {\n    console.log('Nenhum título atendeu às condições de filtro (1 ou 18 dias de atraso).');\n  }\n\n  return titulosParaAlerta.map(titulo => {\n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n\n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    let statusAlerta = '';\n    if (diasAtraso === 1) {\n      statusAlerta = 'venceu_ontem';\n    } else if (diasAtraso === 18) {\n      statusAlerta = 'atraso_18_dias';\n    }\n\n    return {\n      json: {\n        ...titulo,\n        statusAlerta: statusAlerta\n      }\n    };\n  });\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        240
+      ],
+      "id": "516f6aa0-58d0-4ecf-b110-18afec402710",
+      "name": "Filtrar Títulos - Atraso 1/18 Dias"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        544,
+        240
+      ],
+      "id": "d342cd34-60ee-4c2e-8938-95f1a1e8bebc",
+      "name": "Processar Títulos Um a Um - D.P.O"
+    },
+    {
+      "parameters": {
+        "amount": 0.3,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        96
+      ],
+      "id": "e0a1e8fc-bd3b-4dc1-a325-58bf58d084d1",
+      "name": "Aguardar 1 minuto (Limite de API)",
+      "webhookId": "b82d18ac-5eeb-4227-9d33-eef5f5f96ede"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "=venceu_ontem",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cf4470e3-0e4a-4674-a3b8-c2cc0971623f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e18cfef3-1968-40c6-a4ec-f2e27b22abf3",
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "atraso_18_dias",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        992,
+        96
+      ],
+      "id": "a2e08829-b243-4dea-80dc-c6afa5f49aad",
+      "name": "Verificar Tipo de Atraso"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        752
+      ],
+      "id": "b3145077-2a38-48a5-97e3-d60c1b73123e",
+      "name": "Programar Disparo - BIODINÂMICA"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"01\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        96,
+        752
+      ],
+      "id": "ef552eae-65c6-4296-83e0-e497d2d88c97",
+      "name": "Buscar Títulos Vencidos - BIODINÂMICA",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.flatMap(item => {\n  const titulos = item.json.itens;\n\n  if (!titulos || !Array.isArray(titulos)) {\n    console.log('Nenhum título encontrado ou formato inválido.');\n    return [{ json: { error: 'Nenhum título encontrado ou formato inválido.' } }];\n  }\n\n  const hoje = new Date();\n  hoje.setHours(0, 0, 0, 0);\n\n  const titulosParaAlerta = titulos.filter(titulo => {\n    if (!titulo.vencimento) {\n      console.log('Título sem data de vencimento:', titulo);\n      return false;\n    }\n    \n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n    \n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    console.log(`Título: ${titulo.numero}, Vencimento: ${titulo.vencimento}, Dias de Atraso: ${diasAtraso}`);\n    \n    return diasAtraso === 19 || diasAtraso === 18;\n  });\n\n  if (titulosParaAlerta.length === 0) {\n    console.log('Nenhum título atendeu às condições de filtro (1 ou 19 dias de atraso).');\n  }\n\n  return titulosParaAlerta.map(titulo => {\n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n\n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    let statusAlerta = '';\n    if (diasAtraso === 19) {\n      statusAlerta = 'venceu_ontem';\n    } else if (diasAtraso === 18) {\n      statusAlerta = 'atraso_18_dias';\n    }\n\n    return {\n      json: {\n        ...titulo,\n        statusAlerta: statusAlerta\n      }\n    };\n  });\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        752
+      ],
+      "id": "5733bebf-9325-460e-a70b-df715889e913",
+      "name": "Filtrar Títulos - Atraso 1/18 Dias1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        544,
+        752
+      ],
+      "id": "55c98cc0-d2ab-4012-b006-62d6e93668f5",
+      "name": "Processar Títulos Um a Um - BIODINÂMICA"
+    },
+    {
+      "parameters": {
+        "amount": 0.3,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        608
+      ],
+      "id": "83c46a70-5f5c-4430-917f-77e9d8ebb363",
+      "name": "Aguardar 1 minuto (Limite de API)1",
+      "webhookId": "b82d18ac-5eeb-4227-9d33-eef5f5f96ede"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "=venceu_ontem",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cf4470e3-0e4a-4674-a3b8-c2cc0971623f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e18cfef3-1968-40c6-a4ec-f2e27b22abf3",
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "atraso_18_dias",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        992,
+        608
+      ],
+      "id": "5d2ab440-07e1-4c9c-ac03-320632ddf2d9",
+      "name": "Verificar Tipo de Atraso1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "=venceu_ontem",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cf4470e3-0e4a-4674-a3b8-c2cc0971623f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e18cfef3-1968-40c6-a4ec-f2e27b22abf3",
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "atraso_18_dias",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        992,
+        1120
+      ],
+      "id": "9312320b-cf32-49ea-909d-aa89d5f52687",
+      "name": "Verificar Tipo de Atraso2"
+    },
+    {
+      "parameters": {
+        "amount": 0.3,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        1120
+      ],
+      "id": "a29bc302-516b-4e34-841d-1f57006bec57",
+      "name": "Aguardar 1 minuto (Limite de API)2",
+      "webhookId": "b82d18ac-5eeb-4227-9d33-eef5f5f96ede"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        544,
+        1264
+      ],
+      "id": "aa587bd1-0763-4928-af65-326019f4f880",
+      "name": "Processar Títulos Um a Um - MULTIBRASIL"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.flatMap(item => {\n  const titulos = item.json.itens;\n\n  if (!titulos || !Array.isArray(titulos)) {\n    console.log('Nenhum título encontrado ou formato inválido.');\n    return [{ json: { error: 'Nenhum título encontrado ou formato inválido.' } }];\n  }\n\n  const hoje = new Date();\n  hoje.setHours(0, 0, 0, 0);\n\n  const titulosParaAlerta = titulos.filter(titulo => {\n    if (!titulo.vencimento) {\n      console.log('Título sem data de vencimento:', titulo);\n      return false;\n    }\n    \n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n    \n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    console.log(`Título: ${titulo.numero}, Vencimento: ${titulo.vencimento}, Dias de Atraso: ${diasAtraso}`);\n    \n    return diasAtraso === 1 || diasAtraso === 18;\n  });\n\n  if (titulosParaAlerta.length === 0) {\n    console.log('Nenhum título atendeu às condições de filtro (1 ou 18 dias de atraso).');\n  }\n\n  return titulosParaAlerta.map(titulo => {\n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n\n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    let statusAlerta = '';\n    if (diasAtraso === 1) {\n      statusAlerta = 'venceu_ontem';\n    } else if (diasAtraso === 18) {\n      statusAlerta = 'atraso_18_dias';\n    }\n\n    return {\n      json: {\n        ...titulo,\n        statusAlerta: statusAlerta\n      }\n    };\n  });\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        1264
+      ],
+      "id": "4ba5ecdd-9ccd-411f-9a12-f577947d8a54",
+      "name": "Filtrar Títulos - Atraso 1/18 Dias2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"04\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        96,
+        1264
+      ],
+      "id": "abd08a19-da3a-408e-b004-cdd9cb945d18",
+      "name": "Buscar Títulos Vencidos - MULTIBRASIL",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        1264
+      ],
+      "id": "6e25d51d-33f6-4f25-aea2-fe14744f2703",
+      "name": "Programar Disparo - MULTIBRASIL"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        1824
+      ],
+      "id": "95d4357b-d30f-41e5-8555-ac491ed327ed",
+      "name": "Programar Disparo - INJECTA"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://biodinamica.fortiddns.com:8098/rest/rettitvenc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"itens\":[{\"id\":\"11\"}]}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        96,
+        1824
+      ],
+      "id": "a55ec905-2852-4155-afca-74d7ebf065a1",
+      "name": "Buscar Títulos Vencidos - INJECTA",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "btamJXHw7h2FLjOg",
+          "name": "API TOTVS Rest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.flatMap(item => {\n  const titulos = item.json.itens;\n\n  if (!titulos || !Array.isArray(titulos)) {\n    console.log('Nenhum título encontrado ou formato inválido.');\n    return [{ json: { error: 'Nenhum título encontrado ou formato inválido.' } }];\n  }\n\n  const hoje = new Date();\n  hoje.setHours(0, 0, 0, 0);\n\n  const titulosParaAlerta = titulos.filter(titulo => {\n    if (!titulo.vencimento) {\n      console.log('Título sem data de vencimento:', titulo);\n      return false;\n    }\n    \n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n    \n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    console.log(`Título: ${titulo.numero}, Vencimento: ${titulo.vencimento}, Dias de Atraso: ${diasAtraso}`);\n    \n    return diasAtraso === 1 || diasAtraso === 18;\n  });\n\n  if (titulosParaAlerta.length === 0) {\n    console.log('Nenhum título atendeu às condições de filtro (1 ou 18 dias de atraso).');\n  }\n\n  return titulosParaAlerta.map(titulo => {\n    const partesData = titulo.vencimento.split('/');\n    const vencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);\n    vencimento.setHours(0, 0, 0, 0);\n\n    const diferencaEmMilissegundos = hoje.getTime() - vencimento.getTime();\n    const diasAtraso = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));\n    \n    let statusAlerta = '';\n    if (diasAtraso === 1) {\n      statusAlerta = 'venceu_ontem';\n    } else if (diasAtraso === 18) {\n      statusAlerta = 'atraso_18_dias';\n    }\n\n    return {\n      json: {\n        ...titulo,\n        statusAlerta: statusAlerta\n      }\n    };\n  });\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        1824
+      ],
+      "id": "f50322b6-0088-4921-a5b9-b6a1a8f78c51",
+      "name": "Filtrar Títulos - Atraso 1/18 Dias3"
+    },
+    {
+      "parameters": {
+        "amount": 0.3,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        1680
+      ],
+      "id": "6b90dde9-50c0-4f19-84bb-1a67bd0f1bf5",
+      "name": "Aguardar 1 minuto (Limite de API)3",
+      "webhookId": "b82d18ac-5eeb-4227-9d33-eef5f5f96ede"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "=venceu_ontem",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cf4470e3-0e4a-4674-a3b8-c2cc0971623f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e18cfef3-1968-40c6-a4ec-f2e27b22abf3",
+                    "leftValue": "={{ $json.statusAlerta }}",
+                    "rightValue": "atraso_18_dias",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        992,
+        1680
+      ],
+      "id": "3ac0db8a-a478-48f1-a438-bc2d782ce442",
+      "name": "Verificar Tipo de Atraso3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Processar Títulos Um a Um - D.P.O",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me1": {
+      "main": [
+        [
+          {
+            "node": "Processar Títulos Um a Um - BIODINÂMICA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me2": {
+      "main": [
+        [
+          {
+            "node": "Processar Títulos Um a Um - MULTIBRASIL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items3": {
+      "main": [
+        [
+          {
+            "node": "Aguardar 1 minuto (Limite de API)3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programar Disparo - D.P.O": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos - D.P.O",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos - D.P.O": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Títulos - Atraso 1/18 Dias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Títulos - Atraso 1/18 Dias": {
+      "main": [
+        [
+          {
+            "node": "Processar Títulos Um a Um - D.P.O",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Títulos Um a Um - D.P.O": {
+      "main": [
+        [
+          {
+            "node": "Aguardar 1 minuto (Limite de API)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aguardar 1 minuto (Limite de API)": {
+      "main": [
+        [
+          {
+            "node": "Verificar Tipo de Atraso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Tipo de Atraso": {
+      "main": [
+        [
+          {
+            "node": "Aviso 1 dia - Empresa 09",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atraso 18 dias - Empresa 09",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programar Disparo - BIODINÂMICA": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos - BIODINÂMICA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos - BIODINÂMICA": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Títulos - Atraso 1/18 Dias1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Títulos - Atraso 1/18 Dias1": {
+      "main": [
+        [
+          {
+            "node": "Processar Títulos Um a Um - BIODINÂMICA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Títulos Um a Um - BIODINÂMICA": {
+      "main": [
+        [
+          {
+            "node": "Aguardar 1 minuto (Limite de API)1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aguardar 1 minuto (Limite de API)1": {
+      "main": [
+        [
+          {
+            "node": "Verificar Tipo de Atraso1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Tipo de Atraso1": {
+      "main": [
+        [
+          {
+            "node": "Aviso 1 dia - Empresa 01",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atraso 18 dias - Empresa 01",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Tipo de Atraso2": {
+      "main": [
+        [
+          {
+            "node": "Aviso 1 dia - Empresa 04",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atraso 18 dias - Empresa 04",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aguardar 1 minuto (Limite de API)2": {
+      "main": [
+        [
+          {
+            "node": "Verificar Tipo de Atraso2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Títulos Um a Um - MULTIBRASIL": {
+      "main": [
+        [
+          {
+            "node": "Aguardar 1 minuto (Limite de API)2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Títulos - Atraso 1/18 Dias2": {
+      "main": [
+        [
+          {
+            "node": "Processar Títulos Um a Um - MULTIBRASIL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos - MULTIBRASIL": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Títulos - Atraso 1/18 Dias2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programar Disparo - MULTIBRASIL": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos - MULTIBRASIL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Programar Disparo - INJECTA": {
+      "main": [
+        [
+          {
+            "node": "Buscar Títulos Vencidos - INJECTA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Títulos Vencidos - INJECTA": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Títulos - Atraso 1/18 Dias3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Títulos - Atraso 1/18 Dias3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aguardar 1 minuto (Limite de API)3": {
+      "main": [
+        [
+          {
+            "node": "Verificar Tipo de Atraso3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Tipo de Atraso3": {
+      "main": [
+        [
+          {
+            "node": "Aviso 1 dia - Empresa 11",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atraso 18 dias - Empresa 11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b1e4d3da-509b-4876-85d5-4482dac14270",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a7d7cc7c99f3590112d0e66b8873c6d63f4bfdd5a8c03f41710a3ed40c077aeb"
+  },
+  "id": "8jpzsd7NmsCdtnp8",
+  "tags": []
+}
